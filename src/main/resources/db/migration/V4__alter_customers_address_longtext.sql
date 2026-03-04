@@ -1,1 +1,0 @@
-ALTER TABLE customers MODIFY address LONGTEXT;
