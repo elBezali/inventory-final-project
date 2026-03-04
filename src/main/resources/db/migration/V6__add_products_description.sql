@@ -1,0 +1,2 @@
+ALTER TABLE products
+  ADD COLUMN description LONGTEXT NULL AFTER name;
