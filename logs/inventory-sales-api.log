@@ -1,0 +1,203 @@
+2026-03-04 23:36:50.575 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-04 23:36:50.610 INFO  [main] c.d.i.InventorySalesApiApplication - Starting InventorySalesApiApplication using Java 23.0.1 with PID 42436 (D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api\target\classes started by user in D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api)
+2026-03-04 23:36:50.611 DEBUG [main] c.d.i.InventorySalesApiApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-04 23:36:50.611 INFO  [main] c.d.i.InventorySalesApiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-04 23:36:51.360 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-04 23:36:51.427 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 56 ms. Found 12 JPA repository interfaces.
+2026-03-04 23:36:52.209 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-04 23:36:52.234 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-04 23:36:52.238 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-04 23:36:52.239 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-04 23:36:52.317 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 1664 ms
+2026-03-04 23:36:52.691 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classpath resources at 'classpath:db/callback' ...
+2026-03-04 23:36:52.692 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Determining location urls for classpath:db/callback using ClassLoader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@33909752
+ ...
+2026-03-04 23:36:52.692 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Unable to resolve location classpath:db/callback.
+2026-03-04 23:36:52.692 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classpath resources at 'classpath:db/migration' ...
+2026-03-04 23:36:52.692 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Determining location urls for classpath:db/migration using ClassLoader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@33909752
+ ...
+2026-03-04 23:36:52.692 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning URL: file:/D:/Dibimbing%20Backend%20Batch%205/Final%20Project/inventory-sales-api/target/classes/db/migration
+2026-03-04 23:36:52.693 DEBUG [main] o.f.c.i.s.c.FileSystemClassPathLocationScanner - Scanning starting at classpath root in filesystem: D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api\target\classes\
+2026-03-04 23:36:52.693 DEBUG [main] o.f.c.i.s.c.FileSystemClassPathLocationScanner - Scanning for resources in path: D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api\target\classes\db\migration (db/migration)
+2026-03-04 23:36:52.694 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V1__init_schema.sql
+2026-03-04 23:36:52.694 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V2__seed_master.sql
+2026-03-04 23:36:52.695 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classpath resources at 'classpath:db/migration' ...
+2026-03-04 23:36:52.695 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Determining location urls for classpath:db/migration using ClassLoader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@33909752
+ ...
+2026-03-04 23:36:52.695 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning URL: file:/D:/Dibimbing%20Backend%20Batch%205/Final%20Project/inventory-sales-api/target/classes/db/migration
+2026-03-04 23:36:52.695 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V1__init_schema.sql
+2026-03-04 23:36:52.695 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V2__seed_master.sql
+2026-03-04 23:36:52.695 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classes at classpath:db/migration
+2026-03-04 23:36:52.697 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-04 23:36:52.823 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62054faf
+2026-03-04 23:36:52.825 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-04 23:36:52.846 DEBUG [main] o.f.c.i.r.ResourceNameValidator - Validating V2__seed_master.sql
+2026-03-04 23:36:52.847 DEBUG [main] o.f.c.i.r.ResourceNameValidator - Validating V1__init_schema.sql
+2026-03-04 23:36:52.853 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:mysql://localhost:3306/inventory_sales?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC (MySQL 8.0)
+2026-03-04 23:36:52.853 DEBUG [main] org.flywaydb.core.FlywayExecutor - Database Type: MySQL
+2026-03-04 23:36:52.853 DEBUG [main] org.flywaydb.core.FlywayExecutor - Driver: MySQL Connector/J mysql-connector-j-9.6.0 (Revision: fdef61f4af21fa9e0ac334ff0664ec754c164cc0)
+2026-03-04 23:36:52.853 DEBUG [main] org.flywaydb.core.FlywayExecutor - DDL Transactions Supported: false
+2026-03-04 23:36:52.854 DEBUG [main] o.f.c.i.s.SchemaHistoryFactory - Schemas: 
+2026-03-04 23:36:52.855 DEBUG [main] o.f.c.i.s.SchemaHistoryFactory - Default schema: null
+2026-03-04 23:36:52.864 DEBUG [main] org.flywaydb.core.FlywayExecutor - Scanning for script callbacks ...
+2026-03-04 23:36:52.865 DEBUG [main] o.f.c.i.c.SqlScriptCallbackFactory - Scanning for SQL callbacks ...
+2026-03-04 23:36:52.870 DEBUG [main] o.f.core.internal.command.DbValidate - Validating migrations ...
+2026-03-04 23:36:52.872 DEBUG [main] o.f.c.a.c.ClassicConfiguration - CherryPickConfigurationExtension not found
+2026-03-04 23:36:52.878 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:36:52.878 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:36:52.879 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:36:52.879 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:36:52.880 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:36:52.880 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:36:52.880 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:36:52.880 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:36:52.895 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 2 migrations (execution time 00:00.023s)
+2026-03-04 23:36:52.897 DEBUG [main] o.f.core.internal.command.DbSchemas - Skipping creation of existing schema: `inventory_sales`
+2026-03-04 23:36:52.903 DEBUG [main] o.f.c.a.c.ClassicConfiguration - CherryPickConfigurationExtension not found
+2026-03-04 23:36:52.906 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema `inventory_sales`: 2
+2026-03-04 23:36:52.909 INFO  [main] o.f.core.internal.command.DbMigrate - Schema `inventory_sales` is up to date. No migration necessary.
+2026-03-04 23:36:52.918 DEBUG [main] org.flywaydb.core.FlywayExecutor - Memory usage: 33 of 80M
+2026-03-04 23:36:52.985 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-04 23:36:53.034 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-04 23:36:53.349 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-04 23:36:53.418 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/inventory_sales?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.42
+	Default catalog/schema: inventory_sales/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-04 23:36:54.121 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-04 23:36:54.146 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-04 23:36:54.197 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-04 23:36:54.325 DEBUG [main] c.d.i.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-04 23:36:54.379 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-03-04 23:36:54.380 WARN  [main] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-04 23:36:55.220 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver - Exposing 2 endpoints beneath base path '/actuator'
+2026-03-04 23:36:55.264 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-04 23:36:55.278 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-04 23:36:55.285 INFO  [main] c.d.i.InventorySalesApiApplication - Started InventorySalesApiApplication in 5.096 seconds (process running for 5.414)
+2026-03-04 23:36:55.354 WARN  [main] o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-03-04 23:36:55.354 WARN  [main] o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-03-04 23:37:15.419 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-04 23:37:15.419 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-04 23:37:15.420 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-03-04 23:37:16.005 INFO  [http-nio-8080-exec-7] o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 247 ms
+2026-03-04 23:50:32.666 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-04 23:50:32.699 INFO  [main] c.d.i.InventorySalesApiApplication - Starting InventorySalesApiApplication using Java 23.0.1 with PID 27212 (D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api\target\classes started by user in D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api)
+2026-03-04 23:50:32.699 DEBUG [main] c.d.i.InventorySalesApiApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-04 23:50:32.700 INFO  [main] c.d.i.InventorySalesApiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-04 23:50:33.402 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-04 23:50:33.466 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 57 ms. Found 12 JPA repository interfaces.
+2026-03-04 23:50:34.203 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-04 23:50:34.222 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-04 23:50:34.226 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-04 23:50:34.227 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-04 23:50:34.281 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 1540 ms
+2026-03-04 23:50:34.649 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classpath resources at 'classpath:db/callback' ...
+2026-03-04 23:50:34.649 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Determining location urls for classpath:db/callback using ClassLoader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@33909752
+ ...
+2026-03-04 23:50:34.649 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Unable to resolve location classpath:db/callback.
+2026-03-04 23:50:34.649 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classpath resources at 'classpath:db/migration' ...
+2026-03-04 23:50:34.649 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Determining location urls for classpath:db/migration using ClassLoader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@33909752
+ ...
+2026-03-04 23:50:34.650 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning URL: file:/D:/Dibimbing%20Backend%20Batch%205/Final%20Project/inventory-sales-api/target/classes/db/migration
+2026-03-04 23:50:34.650 DEBUG [main] o.f.c.i.s.c.FileSystemClassPathLocationScanner - Scanning starting at classpath root in filesystem: D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api\target\classes\
+2026-03-04 23:50:34.650 DEBUG [main] o.f.c.i.s.c.FileSystemClassPathLocationScanner - Scanning for resources in path: D:\Dibimbing Backend Batch 5\Final Project\inventory-sales-api\target\classes\db\migration (db/migration)
+2026-03-04 23:50:34.651 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V1__init_schema.sql
+2026-03-04 23:50:34.651 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V2__seed_master.sql
+2026-03-04 23:50:34.652 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classpath resources at 'classpath:db/migration' ...
+2026-03-04 23:50:34.652 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Determining location urls for classpath:db/migration using ClassLoader TomcatEmbeddedWebappClassLoader
+  context: ROOT
+  delegate: true
+----------> Parent Classloader:
+jdk.internal.loader.ClassLoaders$AppClassLoader@33909752
+ ...
+2026-03-04 23:50:34.652 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning URL: file:/D:/Dibimbing%20Backend%20Batch%205/Final%20Project/inventory-sales-api/target/classes/db/migration
+2026-03-04 23:50:34.652 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V1__init_schema.sql
+2026-03-04 23:50:34.652 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Found resource: db/migration/V2__seed_master.sql
+2026-03-04 23:50:34.652 DEBUG [main] o.f.c.i.s.classpath.ClassPathScanner - Scanning for classes at classpath:db/migration
+2026-03-04 23:50:34.654 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-04 23:50:34.763 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@28e48b65
+2026-03-04 23:50:34.764 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-04 23:50:34.784 DEBUG [main] o.f.c.i.r.ResourceNameValidator - Validating V2__seed_master.sql
+2026-03-04 23:50:34.785 DEBUG [main] o.f.c.i.r.ResourceNameValidator - Validating V1__init_schema.sql
+2026-03-04 23:50:34.791 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:mysql://localhost:3306/inventory_sales?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC (MySQL 8.0)
+2026-03-04 23:50:34.792 DEBUG [main] org.flywaydb.core.FlywayExecutor - Database Type: MySQL
+2026-03-04 23:50:34.792 DEBUG [main] org.flywaydb.core.FlywayExecutor - Driver: MySQL Connector/J mysql-connector-j-9.6.0 (Revision: fdef61f4af21fa9e0ac334ff0664ec754c164cc0)
+2026-03-04 23:50:34.792 DEBUG [main] org.flywaydb.core.FlywayExecutor - DDL Transactions Supported: false
+2026-03-04 23:50:34.793 DEBUG [main] o.f.c.i.s.SchemaHistoryFactory - Schemas: 
+2026-03-04 23:50:34.793 DEBUG [main] o.f.c.i.s.SchemaHistoryFactory - Default schema: null
+2026-03-04 23:50:34.802 DEBUG [main] org.flywaydb.core.FlywayExecutor - Scanning for script callbacks ...
+2026-03-04 23:50:34.804 DEBUG [main] o.f.c.i.c.SqlScriptCallbackFactory - Scanning for SQL callbacks ...
+2026-03-04 23:50:34.810 DEBUG [main] o.f.core.internal.command.DbValidate - Validating migrations ...
+2026-03-04 23:50:34.812 DEBUG [main] o.f.c.a.c.ClassicConfiguration - CherryPickConfigurationExtension not found
+2026-03-04 23:50:34.816 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:50:34.816 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:50:34.817 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:50:34.817 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:50:34.818 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:50:34.818 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:50:34.818 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V2__seed_master.sql (filename: V2__seed_master.sql)
+2026-03-04 23:50:34.818 DEBUG [main] o.f.core.internal.scanner.Scanner - Filtering out resource: db/migration/V1__init_schema.sql (filename: V1__init_schema.sql)
+2026-03-04 23:50:34.834 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 2 migrations (execution time 00:00.023s)
+2026-03-04 23:50:34.837 DEBUG [main] o.f.core.internal.command.DbSchemas - Skipping creation of existing schema: `inventory_sales`
+2026-03-04 23:50:34.843 DEBUG [main] o.f.c.a.c.ClassicConfiguration - CherryPickConfigurationExtension not found
+2026-03-04 23:50:34.846 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema `inventory_sales`: 2
+2026-03-04 23:50:34.848 INFO  [main] o.f.core.internal.command.DbMigrate - Schema `inventory_sales` is up to date. No migration necessary.
+2026-03-04 23:50:34.856 DEBUG [main] org.flywaydb.core.FlywayExecutor - Memory usage: 39 of 68M
+2026-03-04 23:50:34.933 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-04 23:50:34.961 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-04 23:50:35.214 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-04 23:50:35.266 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/inventory_sales?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.42
+	Default catalog/schema: inventory_sales/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-04 23:50:35.913 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-04 23:50:35.939 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-04 23:50:35.996 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-04 23:50:36.128 DEBUG [main] c.d.i.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-04 23:50:36.173 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-03-04 23:50:36.173 WARN  [main] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-04 23:50:36.854 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver - Exposing 2 endpoints beneath base path '/actuator'
+2026-03-04 23:50:36.890 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-04 23:50:36.901 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-04 23:50:36.907 INFO  [main] c.d.i.InventorySalesApiApplication - Started InventorySalesApiApplication in 4.562 seconds (process running for 4.818)
+2026-03-04 23:50:36.954 WARN  [main] o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-03-04 23:50:36.954 WARN  [main] o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-03-04 23:50:52.076 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-04 23:50:52.076 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-04 23:50:52.077 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms

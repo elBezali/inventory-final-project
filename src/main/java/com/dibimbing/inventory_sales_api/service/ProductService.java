@@ -13,6 +13,7 @@ import com.dibimbing.inventory_sales_api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     public ProductResponse create(ProductCreateRequest req) {
         if (productRepository.existsBySku(req.getSku())) {
             throw new BadRequestException("SKU already exists");
@@ -42,14 +44,21 @@ public class ProductService {
         return toResponse(saved);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getById(Long id) {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
         return toResponse(p);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponse> list(String q, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        int safeSize = (size <= 0) ? 10 : size;
+
+        int zeroBasedPage = (page <= 1) ? 0 : (page - 1);
+
+        Pageable pageable = PageRequest.of(zeroBasedPage, safeSize, Sort.by(Sort.Direction.DESC, "id"));
+
         Page<Product> result = (q == null || q.isBlank())
                 ? productRepository.findAll(pageable)
                 : productRepository.findByNameContainingIgnoreCase(q, pageable);
@@ -57,6 +66,7 @@ public class ProductService {
         return result.map(this::toResponse);
     }
 
+    @Transactional
     public ProductResponse update(Long id, ProductUpdateRequest req) {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -73,6 +83,7 @@ public class ProductService {
         return toResponse(productRepository.save(p));
     }
 
+    @Transactional
     public void deleteSoft(Long id) {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -82,7 +93,7 @@ public class ProductService {
 
     public PageMeta meta(Page<?> page) {
         return PageMeta.builder()
-                .currentPage(page.getNumber())
+                .currentPage(page.getNumber() + 1) // 0-based -> 1-based
                 .pageSize(page.getSize())
                 .totalItems(page.getTotalElements())
                 .totalPages(page.getTotalPages())
@@ -90,13 +101,15 @@ public class ProductService {
     }
 
     private ProductResponse toResponse(Product p) {
+        Category c = p.getCategory();
+
         return ProductResponse.builder()
                 .id(p.getId())
                 .sku(p.getSku())
                 .name(p.getName())
                 .description(p.getDescription())
-                .categoryId(p.getCategory().getId())
-                .categoryName(p.getCategory().getName())
+                .categoryId(c != null ? c.getId() : null)
+                .categoryName(c != null ? c.getName() : null)
                 .price(p.getPrice())
                 .isActive(p.isActive())
                 .build();
