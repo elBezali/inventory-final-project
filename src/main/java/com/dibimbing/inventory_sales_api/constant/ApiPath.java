@@ -13,4 +13,6 @@ public class ApiPath {
     public static final String STOCK_MOVEMENTS = API + "/stock-movements";
     public static final String PAYMENT_TRANSACTIONS = API + "/payment-transactions";
     public static final String SHIPMENTS = API + "/shipments";
+    public static final String USERS = API + "/users";
+    public static final String ROLES = API + "/roles";
 }
