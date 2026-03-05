@@ -10,6 +10,9 @@ import com.dibimbing.inventory_sales_api.util.OrderNoGenerator;
 import com.dibimbing.inventory_sales_api.util.ShipmentNoGenerator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,7 +22,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
+
+    private static final Logger AUDIT = LoggerFactory.getLogger("com.dibimbing.inventory_sales_api.audit");
 
     private final CustomerRepository customerRepository;
     private final WarehouseRepository warehouseRepository;
@@ -32,11 +38,21 @@ public class OrderService {
 
     @Transactional
     public OrderResponse createOrder(OrderCreateRequest req) {
+        log.info("OrderService.createOrder called customerId={} warehouseId={} items={}",
+                req.getCustomerId(), req.getWarehouseId(),
+                req.getItems() == null ? 0 : req.getItems().size());
+
         Customer customer = customerRepository.findById(req.getCustomerId())
-                .orElseThrow(() -> new NotFoundException("Customer not found"));
+                .orElseThrow(() -> {
+                    log.warn("Create order failed: customer not found customerId={}", req.getCustomerId());
+                    return new NotFoundException("Customer not found");
+                });
 
         Warehouse wh = warehouseRepository.findById(req.getWarehouseId())
-                .orElseThrow(() -> new NotFoundException("Warehouse not found"));
+                .orElseThrow(() -> {
+                    log.warn("Create order failed: warehouse not found warehouseId={}", req.getWarehouseId());
+                    return new NotFoundException("Warehouse not found");
+                });
 
         SalesOrder order = SalesOrder.builder()
                 .orderNo(OrderNoGenerator.next())
@@ -51,21 +67,29 @@ public class OrderService {
 
         for (var itemReq : req.getItems()) {
             Product product = productRepository.findById(itemReq.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found: " + itemReq.getProductId()));
+                    .orElseThrow(() -> {
+                        log.warn("Create order failed: product not found productId={}", itemReq.getProductId());
+                        return new NotFoundException("Product not found: " + itemReq.getProductId());
+                    });
 
             if (!product.isActive()) {
+                log.warn("Create order rejected: product inactive productId={}", product.getId());
                 throw new BadRequestException("Product inactive: " + product.getId());
             }
 
             Stock stock = stockRepository.findByWarehouseIdAndProductId(wh.getId(), product.getId())
-                    .orElseThrow(() -> new BadRequestException("Stock not found for productId " + product.getId() + " in warehouse " + wh.getId()));
+                    .orElseThrow(() -> {
+                        log.warn("Create order failed: stock not found warehouseId={} productId={}", wh.getId(), product.getId());
+                        return new BadRequestException("Stock not found for productId " + product.getId() + " in warehouse " + wh.getId());
+                    });
 
             long available = stock.available();
             if (available < itemReq.getQty()) {
+                log.warn("Create order rejected: insufficient stock productId={} warehouseId={} available={} reqQty={}",
+                        product.getId(), wh.getId(), available, itemReq.getQty());
                 throw new BadRequestException("Insufficient stock for productId " + product.getId() + ". Available=" + available);
             }
 
-            // reserve stock
             stock.setReserved(stock.getReserved() + itemReq.getQty());
             stockRepository.save(stock);
 
@@ -93,26 +117,44 @@ public class OrderService {
 
             order.getItems().add(soi);
             total = total.add(subtotal);
+
+            log.debug("Reserve OK orderNo={} productId={} qty={} onHand={} reserved={} availableNow={}",
+                    order.getOrderNo(), product.getId(), itemReq.getQty(),
+                    stock.getOnHand(), stock.getReserved(), stock.available());
         }
 
         order.setTotalAmount(total);
         SalesOrder saved = salesOrderRepository.save(order);
+
+        log.info("Order created orderId={} orderNo={} total={}", saved.getId(), saved.getOrderNo(), saved.getTotalAmount());
+        AUDIT.info("ORDER_CREATE orderId=%d orderNo=%s customerId=%d warehouseId=%d total=%s"
+                .formatted(saved.getId(), saved.getOrderNo(), customer.getId(), wh.getId(), saved.getTotalAmount()));
 
         return toOrderResponse(saved);
     }
 
     @Transactional
     public void markPaymentSuccess(Long orderId, PaymentTransaction.Method method, String providerRef) {
+        log.info("OrderService.markPaymentSuccess called orderId={} method={} providerRef={}", orderId, method, providerRef);
+
         SalesOrder order = salesOrderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
+                .orElseThrow(() -> {
+                    log.warn("Payment success failed: order not found orderId={}", orderId);
+                    return new NotFoundException("Order not found");
+                });
 
         if (order.getStatus() == SalesOrder.Status.CANCELLED) {
+            log.warn("Payment success rejected: order cancelled orderId={}", orderId);
             throw new BadRequestException("Order already cancelled");
         }
+
         if (order.getStatus() == SalesOrder.Status.PAID) {
+            log.info("Payment success ignored: order already PAID orderId={}", orderId);
             return;
         }
+
         if (order.getStatus() != SalesOrder.Status.PENDING_PAYMENT) {
+            log.warn("Payment success rejected: invalid status orderId={} status={}", orderId, order.getStatus());
             throw new BadRequestException("Order status invalid for payment: " + order.getStatus());
         }
 
@@ -124,21 +166,29 @@ public class OrderService {
                 .paidAt(LocalDateTime.now())
                 .providerRef(providerRef)
                 .build();
-        paymentTransactionRepository.save(pay);
 
-        // finalize stock: reserved -> out (reduce onHand)
+        PaymentTransaction savedPay = paymentTransactionRepository.save(pay);
+
         Warehouse wh = order.getWarehouse();
         for (SalesOrderItem it : order.getItems()) {
             Product product = it.getProduct();
 
             Stock stock = stockRepository.findByWarehouseIdAndProductId(wh.getId(), product.getId())
-                    .orElseThrow(() -> new BadRequestException("Stock missing for payment finalize"));
+                    .orElseThrow(() -> {
+                        log.error("Finalize stock failed: stock missing warehouseId={} productId={}", wh.getId(), product.getId());
+                        return new BadRequestException("Stock missing for payment finalize");
+                    });
 
             long reserved = stock.getReserved();
             if (reserved < it.getQty()) {
+                log.error("Finalize stock failed: reserved inconsistent orderId={} productId={} reserved={} qty={}",
+                        orderId, product.getId(), reserved, it.getQty());
                 throw new BadRequestException("Reserved stock inconsistent for productId " + product.getId());
             }
+
             if (stock.getOnHand() < it.getQty()) {
+                log.error("Finalize stock failed: onHand insufficient orderId={} productId={} onHand={} qty={}",
+                        orderId, product.getId(), stock.getOnHand(), it.getQty());
                 throw new BadRequestException("On hand stock insufficient during finalize for productId " + product.getId());
             }
 
@@ -152,41 +202,64 @@ public class OrderService {
                     .type(StockMovement.Type.OUT)
                     .qty(it.getQty())
                     .referenceType(StockMovement.ReferenceType.PAYMENT)
-                    .referenceId(pay.getId())
+                    .referenceId(savedPay.getId())
                     .note("Finalize stock for order " + order.getOrderNo())
                     .createdAt(LocalDateTime.now())
                     .build());
+
+            log.debug("Finalize stock OK orderNo={} productId={} qty={} onHandNow={} reservedNow={}",
+                    order.getOrderNo(), product.getId(), it.getQty(), stock.getOnHand(), stock.getReserved());
         }
 
         order.setStatus(SalesOrder.Status.PAID);
         salesOrderRepository.save(order);
 
-        // auto-create shipment READY
         Shipment shipment = Shipment.builder()
                 .order(order)
                 .shipmentNo(ShipmentNoGenerator.next())
                 .status(Shipment.Status.READY)
                 .addressSnapshot(order.getCustomer().getAddress())
                 .build();
-        shipmentRepository.save(shipment);
+        Shipment savedShipment = shipmentRepository.save(shipment);
+
+        log.info("Payment success processed orderId={} paymentId={} shipmentNo={}", orderId, savedPay.getId(), savedShipment.getShipmentNo());
+        AUDIT.info("PAYMENT_SUCCESS orderId=%d orderNo=%s paymentId=%d method=%s amount=%s shipmentNo=%s"
+                .formatted(order.getId(), order.getOrderNo(), savedPay.getId(), method, savedPay.getAmount(), savedShipment.getShipmentNo()));
     }
 
     @Transactional
     public void cancelOrder(Long orderId) {
-        SalesOrder order = salesOrderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
+        log.info("OrderService.cancelOrder called orderId={}", orderId);
 
-        if (order.getStatus() == SalesOrder.Status.PAID || order.getStatus() == SalesOrder.Status.SHIPPED || order.getStatus() == SalesOrder.Status.COMPLETED) {
+        SalesOrder order = salesOrderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.warn("Cancel order failed: not found orderId={}", orderId);
+                    return new NotFoundException("Order not found");
+                });
+
+        if (order.getStatus() == SalesOrder.Status.PAID
+                || order.getStatus() == SalesOrder.Status.SHIPPED
+                || order.getStatus() == SalesOrder.Status.COMPLETED) {
+            log.warn("Cancel order rejected: status too late orderId={} status={}", orderId, order.getStatus());
             throw new BadRequestException("Cannot cancel after paid/shipped/completed");
         }
-        if (order.getStatus() == SalesOrder.Status.CANCELLED) return;
+
+        if (order.getStatus() == SalesOrder.Status.CANCELLED) {
+            log.info("Cancel order ignored: already cancelled orderId={}", orderId);
+            return;
+        }
 
         Warehouse wh = order.getWarehouse();
         for (SalesOrderItem it : order.getItems()) {
             Stock stock = stockRepository.findByWarehouseIdAndProductId(wh.getId(), it.getProduct().getId())
-                    .orElseThrow(() -> new BadRequestException("Stock missing for cancel"));
+                    .orElseThrow(() -> {
+                        log.error("Cancel order failed: stock missing warehouseId={} productId={}", wh.getId(), it.getProduct().getId());
+                        return new BadRequestException("Stock missing for cancel");
+                    });
 
             if (stock.getReserved() < it.getQty()) {
+                log.error("Cancel order failed: reserved inconsistent orderId={} productId={} reserved={} qty={}",
+                        orderId, it.getProduct().getId(), stock.getReserved(), it.getQty());
                 throw new BadRequestException("Reserved stock inconsistent for cancel");
             }
 
@@ -203,28 +276,40 @@ public class OrderService {
                     .note("Release reserve for cancelled order " + order.getOrderNo())
                     .createdAt(LocalDateTime.now())
                     .build());
+
+            log.debug("Release reserve OK orderNo={} productId={} qty={} reservedNow={}",
+                    order.getOrderNo(), it.getProduct().getId(), it.getQty(), stock.getReserved());
         }
 
         order.setStatus(SalesOrder.Status.CANCELLED);
         salesOrderRepository.save(order);
+
+        log.info("Order cancelled orderId={} orderNo={}", order.getId(), order.getOrderNo());
+        AUDIT.info("ORDER_CANCELLED orderId=%d orderNo=%s".formatted(order.getId(), order.getOrderNo()));
     }
 
     public OrderResponse getOrder(Long orderId) {
+        log.debug("OrderService.getOrder called orderId={}", orderId);
+
         SalesOrder order = salesOrderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
+                .orElseThrow(() -> {
+                    log.warn("Get order failed: not found orderId={}", orderId);
+                    return new NotFoundException("Order not found");
+                });
+
         return toOrderResponse(order);
     }
 
     private OrderResponse toOrderResponse(SalesOrder order) {
-        List<OrderResponse.OrderResponseItem> items = order.getItems().stream().map(it ->
-                OrderResponse.OrderResponseItem.builder()
+        List<OrderResponse.OrderResponseItem> items = order.getItems().stream()
+                .map(it -> OrderResponse.OrderResponseItem.builder()
                         .productId(it.getProduct().getId())
                         .productName(it.getProduct().getName())
                         .qty(it.getQty())
                         .unitPrice(it.getUnitPrice())
                         .subtotal(it.getSubtotal())
                         .build()
-        ).toList();
+                ).toList();
 
         return OrderResponse.builder()
                 .id(order.getId())

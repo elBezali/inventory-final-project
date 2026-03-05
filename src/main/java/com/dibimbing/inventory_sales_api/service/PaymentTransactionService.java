@@ -10,6 +10,9 @@ import com.dibimbing.inventory_sales_api.exception.NotFoundException;
 import com.dibimbing.inventory_sales_api.repository.PaymentTransactionRepository;
 import com.dibimbing.inventory_sales_api.repository.SalesOrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +20,23 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentTransactionService {
+
+    private static final Logger AUDIT = LoggerFactory.getLogger("com.dibimbing.inventory_sales_api.audit");
 
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final SalesOrderRepository salesOrderRepository;
 
     public PaymentTransactionResponse create(PaymentTransactionCreateRequest req) {
+        log.info("PaymentTransactionService.create called orderId={} method={} amount={}",
+                req.getOrderId(), req.getPaymentMethod(), req.getAmount());
+
         SalesOrder order = salesOrderRepository.findById(req.getOrderId())
-                .orElseThrow(() -> new NotFoundException("Order not found"));
+                .orElseThrow(() -> {
+                    log.warn("Create payment tx failed: order not found orderId={}", req.getOrderId());
+                    return new NotFoundException("Order not found");
+                });
 
         PaymentTransaction tx = PaymentTransaction.builder()
                 .order(order)
@@ -34,19 +46,33 @@ public class PaymentTransactionService {
                 .status(PaymentTransaction.Status.INITIATED)
                 .build();
 
-        return toResponse(paymentTransactionRepository.save(tx));
+        PaymentTransaction saved = paymentTransactionRepository.save(tx);
+
+        log.info("Payment tx created paymentId={} orderId={} status={}", saved.getId(), order.getId(), saved.getStatus());
+        AUDIT.info("PAYMENT_TX_CREATE paymentId=%d orderId=%d status=%s amount=%s"
+                .formatted(saved.getId(), order.getId(), saved.getStatus(), saved.getAmount()));
+
+        return toResponse(saved);
     }
 
     public PaymentTransactionResponse getById(Long id) {
+        log.debug("PaymentTransactionService.getById called id={}", id);
+
         PaymentTransaction tx = paymentTransactionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Payment transaction not found"));
+                .orElseThrow(() -> {
+                    log.warn("Payment tx not found id={}", id);
+                    return new NotFoundException("Payment transaction not found");
+                });
+
         return toResponse(tx);
     }
 
     public Page<PaymentTransactionResponse> list(Long orderId, PaymentTransaction.Status status, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        log.debug("PaymentTransactionService.list called orderId={} status={} page={} size={}", orderId, status, page, size);
 
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<PaymentTransaction> result;
+
         if (orderId != null && status != null) {
             result = paymentTransactionRepository.findByOrderIdAndStatus(orderId, status, pageable);
         } else if (orderId != null) {
@@ -61,15 +87,26 @@ public class PaymentTransactionService {
     }
 
     public PaymentTransactionResponse updateStatus(Long id, PaymentTransactionUpdateStatusRequest req) {
+        log.info("PaymentTransactionService.updateStatus called id={} newStatus={}", id, req.getStatus());
+
         PaymentTransaction tx = paymentTransactionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Payment transaction not found"));
+                .orElseThrow(() -> {
+                    log.warn("Update payment tx failed: not found id={}", id);
+                    return new NotFoundException("Payment transaction not found");
+                });
 
         tx.setStatus(req.getStatus());
         if (req.getStatus() == PaymentTransaction.Status.SUCCESS) {
             tx.setPaidAt(LocalDateTime.now());
         }
 
-        return toResponse(paymentTransactionRepository.save(tx));
+        PaymentTransaction saved = paymentTransactionRepository.save(tx);
+
+        log.info("Payment tx status updated id={} status={} paidAt={}", saved.getId(), saved.getStatus(), saved.getPaidAt());
+        AUDIT.info("PAYMENT_TX_STATUS_UPDATE paymentId=%d orderId=%d status=%s"
+                .formatted(saved.getId(), saved.getOrder().getId(), saved.getStatus()));
+
+        return toResponse(saved);
     }
 
     public PageMeta meta(Page<?> page) {

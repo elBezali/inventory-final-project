@@ -6,25 +6,36 @@ import com.dibimbing.inventory_sales_api.entity.StockMovement;
 import com.dibimbing.inventory_sales_api.exception.NotFoundException;
 import com.dibimbing.inventory_sales_api.repository.StockMovementRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StockMovementService {
 
     private final StockMovementRepository stockMovementRepository;
 
     public StockMovementResponse getById(Long id) {
+        log.debug("StockMovementService.getById called id={}", id);
+
         StockMovement mv = stockMovementRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Stock movement not found"));
+                .orElseThrow(() -> {
+                    log.warn("Stock movement not found id={}", id);
+                    return new NotFoundException("Stock movement not found");
+                });
+
         return toResponse(mv);
     }
 
     public Page<StockMovementResponse> list(Long warehouseId, Long productId, StockMovement.Type type, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        log.debug("StockMovementService.list called warehouseId={} productId={} type={} page={} size={}",
+                warehouseId, productId, type, page, size);
 
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<StockMovement> result;
+
         if (warehouseId != null && productId != null && type != null) {
             result = stockMovementRepository.findByWarehouseIdAndProductIdAndType(warehouseId, productId, type, pageable);
         } else if (warehouseId != null && productId != null) {
