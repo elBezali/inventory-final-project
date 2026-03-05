@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Spring Boot config (local secrets)
+src/main/resources/application.properties
+src/main/resources/application.yml
+
+# Optional: profiles
+src/main/resources/application-*.properties
+src/main/resources/application-*.yml
