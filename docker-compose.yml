@@ -6,7 +6,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: inventory_sales
     ports:
-      - "3306:3306"
+      - "3307:3306"
     command: ["--default-authentication-plugin=mysql_native_password"]
     volumes:
       - db_data:/var/lib/mysql
@@ -18,7 +18,7 @@ services:
       DB_URL: jdbc:mysql://db:3306/inventory_sales?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       DB_USERNAME: root
       DB_PASSWORD: root
-      JWT_SECRET: CHANGE_ME_TO_A_LONG_RANDOM_SECRET_KEY_32+_CHARS
+      JWT_SECRET: 8vN$3kL!pQ9zX2mR#7sT@4wY6bH1cD5fJ8nK!2pL
       JWT_EXP_MINUTES: 120
     ports:
       - "8080:8080"
