@@ -7,8 +7,12 @@ import com.dibimbing.inventory_sales_api.exception.NotFoundException;
 import com.dibimbing.inventory_sales_api.repository.StockMovementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ public class StockMovementService {
 
     private final StockMovementRepository stockMovementRepository;
 
+    @Transactional(readOnly = true)
     public StockMovementResponse getById(Long id) {
         log.debug("StockMovementService.getById called id={}", id);
 
@@ -29,21 +34,38 @@ public class StockMovementService {
         return toResponse(mv);
     }
 
-    public Page<StockMovementResponse> list(Long warehouseId, Long productId, StockMovement.Type type, int page, int size) {
-        log.debug("StockMovementService.list called warehouseId={} productId={} type={} page={} size={}",
-                warehouseId, productId, type, page, size);
+    @Transactional(readOnly = true)
+    public Page<StockMovementResponse> list(
+            Long warehouseId,
+            Long productId,
+            StockMovement.Type type,
+            int page,
+            int size
+    ) {
+        log.debug(
+                "StockMovementService.list called warehouseId={} productId={} type={} page={} size={}",
+                warehouseId, productId, type, page, size
+        );
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<StockMovement> result;
 
         if (warehouseId != null && productId != null && type != null) {
-            result = stockMovementRepository.findByWarehouseIdAndProductIdAndType(warehouseId, productId, type, pageable);
+            result = stockMovementRepository.findByWarehouseIdAndProductIdAndType(
+                    warehouseId, productId, type, pageable
+            );
         } else if (warehouseId != null && productId != null) {
-            result = stockMovementRepository.findByWarehouseIdAndProductId(warehouseId, productId, pageable);
+            result = stockMovementRepository.findByWarehouseIdAndProductId(
+                    warehouseId, productId, pageable
+            );
         } else if (warehouseId != null && type != null) {
-            result = stockMovementRepository.findByWarehouseIdAndType(warehouseId, type, pageable);
+            result = stockMovementRepository.findByWarehouseIdAndType(
+                    warehouseId, type, pageable
+            );
         } else if (productId != null && type != null) {
-            result = stockMovementRepository.findByProductIdAndType(productId, type, pageable);
+            result = stockMovementRepository.findByProductIdAndType(
+                    productId, type, pageable
+            );
         } else if (warehouseId != null) {
             result = stockMovementRepository.findByWarehouseId(warehouseId, pageable);
         } else if (productId != null) {

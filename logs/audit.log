@@ -1,2 +1,12 @@
-2026-03-06 00:18:45.405 INFO  LOGIN_SUCCESS userId=1 email=user@example.com roles=ADMIN
-2026-03-06 00:19:50.067 INFO  WAREHOUSE_CREATE warehouseId=3 name=string
+2026-03-07 01:02:41.055 INFO  LOGIN_SUCCESS userId=1 email=user@example.com roles=ADMIN
+2026-03-07 01:03:32.441 INFO  STOCK_ADJUST stockId=1 warehouseId=1 productId=1 delta=100 onHandNow=100
+2026-03-07 01:03:52.225 INFO  ORDER_CREATE orderId=1 orderNo=SO-20260307-000001 customerId=1 warehouseId=1 total=150.00
+2026-03-07 01:21:50.051 INFO  LOGIN_SUCCESS userId=1 email=user@example.com roles=ADMIN
+2026-03-07 01:34:19.219 INFO  LOGIN_SUCCESS userId=1 email=user@example.com roles=ADMIN
+2026-03-07 01:34:42.477 INFO  REPORT_TOP_PRODUCTS limit=5 resultSize=0
+2026-03-07 01:34:52.825 INFO  REPORT_LOW_STOCK threshold=5 resultSize=0
+2026-03-07 01:36:17.662 INFO  PAYMENT_SUCCESS orderId=1 orderNo=SO-20260307-000001 paymentId=1 method=VA amount=150.00 shipmentNo=SHP-20260307-000001
+2026-03-07 01:36:23.300 INFO  ORDER_CREATE orderId=3 orderNo=SO-20260307-000002 customerId=1 warehouseId=1 total=14550.00
+2026-03-07 01:36:41.941 INFO  PAYMENT_SUCCESS orderId=3 orderNo=SO-20260307-000002 paymentId=2 method=VA amount=14550.00 shipmentNo=SHP-20260307-000002
+2026-03-07 01:36:50.676 INFO  REPORT_LOW_STOCK threshold=5 resultSize=1
+2026-03-07 01:36:58.456 INFO  REPORT_TOP_PRODUCTS limit=5 resultSize=1

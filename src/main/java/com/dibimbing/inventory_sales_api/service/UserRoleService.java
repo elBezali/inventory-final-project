@@ -1,7 +1,10 @@
 package com.dibimbing.inventory_sales_api.service;
 
 import com.dibimbing.inventory_sales_api.dto.user.UserRoleResponse;
-import com.dibimbing.inventory_sales_api.entity.*;
+import com.dibimbing.inventory_sales_api.entity.Role;
+import com.dibimbing.inventory_sales_api.entity.User;
+import com.dibimbing.inventory_sales_api.entity.UserRole;
+import com.dibimbing.inventory_sales_api.entity.UserRoleId;
 import com.dibimbing.inventory_sales_api.exception.BadRequestException;
 import com.dibimbing.inventory_sales_api.exception.NotFoundException;
 import com.dibimbing.inventory_sales_api.repository.RoleRepository;
@@ -21,7 +24,8 @@ import java.util.List;
 @Slf4j
 public class UserRoleService {
 
-    private static final Logger AUDIT = LoggerFactory.getLogger("com.dibimbing.inventory_sales_api.audit");
+    private static final Logger AUDIT =
+            LoggerFactory.getLogger("com.dibimbing.inventory_sales_api.audit");
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -57,7 +61,8 @@ public class UserRoleService {
         userRoleRepository.save(ur);
 
         log.info("Role assigned userId={} roleId={} roleName={}", userId, roleId, role.getName());
-        AUDIT.info("ROLE_ASSIGNED userId=%d roleId=%d roleName=%s".formatted(userId, roleId, role.getName()));
+        AUDIT.info("ROLE_ASSIGNED userId=%d roleId=%d roleName=%s"
+                .formatted(userId, roleId, role.getName()));
 
         return UserRoleResponse.builder()
                 .userId(userId)
@@ -74,6 +79,7 @@ public class UserRoleService {
             log.warn("Remove role failed: user not found userId={}", userId);
             throw new NotFoundException("User not found");
         }
+
         if (!roleRepository.existsById(roleId)) {
             log.warn("Remove role failed: role not found roleId={}", roleId);
             throw new NotFoundException("Role not found");
@@ -89,6 +95,7 @@ public class UserRoleService {
         AUDIT.info("ROLE_REVOKED userId=%d roleId=%d".formatted(userId, roleId));
     }
 
+    @Transactional(readOnly = true)
     public List<UserRoleResponse> getUserRoles(Long userId) {
         log.debug("UserRoleService.getUserRoles called userId={}", userId);
 

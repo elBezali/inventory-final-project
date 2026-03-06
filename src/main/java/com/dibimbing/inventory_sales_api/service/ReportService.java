@@ -10,8 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,13 +22,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ReportService {
 
-    private static final Logger AUDIT = LoggerFactory.getLogger("com.dibimbing.inventory_sales_api.audit");
+    private static final Logger AUDIT =
+            LoggerFactory.getLogger("com.dibimbing.inventory_sales_api.audit");
 
     private final SalesOrderRepository salesOrderRepository;
     private final StockRepository stockRepository;
 
+    @Transactional(readOnly = true)
     public List<TopProductRow> topProducts(int limit) {
         int safeLimit = Math.max(1, limit);
+
         log.info("ReportService.topProducts called limit={}", safeLimit);
 
         var orders = salesOrderRepository.findAll().stream()
@@ -55,13 +61,16 @@ public class ReportService {
                 .collect(Collectors.toList());
 
         log.info("ReportService.topProducts done resultSize={} fromOrders={}", result.size(), orders.size());
-        AUDIT.info("REPORT_TOP_PRODUCTS limit=%d resultSize=%d".formatted(safeLimit, result.size()));
+        AUDIT.info("REPORT_TOP_PRODUCTS limit=%d resultSize=%d"
+                .formatted(safeLimit, result.size()));
 
         return result;
     }
 
+    @Transactional(readOnly = true)
     public List<LowStockRow> lowStock(long threshold) {
         long safeThreshold = Math.max(0, threshold);
+
         log.info("ReportService.lowStock called threshold={}", safeThreshold);
 
         List<LowStockRow> result = stockRepository.findAll().stream()
@@ -77,7 +86,8 @@ public class ReportService {
                 .toList();
 
         log.info("ReportService.lowStock done resultSize={}", result.size());
-        AUDIT.info("REPORT_LOW_STOCK threshold=%d resultSize=%d".formatted(safeThreshold, result.size()));
+        AUDIT.info("REPORT_LOW_STOCK threshold=%d resultSize=%d"
+                .formatted(safeThreshold, result.size()));
 
         return result;
     }

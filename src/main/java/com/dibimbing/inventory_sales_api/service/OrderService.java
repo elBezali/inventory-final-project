@@ -288,15 +288,14 @@ public class OrderService {
         AUDIT.info("ORDER_CANCELLED orderId=%d orderNo=%s".formatted(order.getId(), order.getOrderNo()));
     }
 
+    @Transactional
     public OrderResponse getOrder(Long orderId) {
         log.debug("OrderService.getOrder called orderId={}", orderId);
-
-        SalesOrder order = salesOrderRepository.findById(orderId)
+        SalesOrder order = salesOrderRepository.findDetailById(orderId)
                 .orElseThrow(() -> {
-                    log.warn("Get order failed: not found orderId={}", orderId);
-                    return new NotFoundException("Order not found");
+                        log.warn("Get order failed: not found orderId={}", orderId);
+                        return new NotFoundException("Order not found");
                 });
-
         return toOrderResponse(order);
     }
 
